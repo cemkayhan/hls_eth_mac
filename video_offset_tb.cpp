@@ -5,19 +5,14 @@
 
 #include <iostream>
 
-#include "ap_int.h"
-#include "ap_axi_sdata.h"
-#include "hls_stream.h"
-
-void video_offset(hls::stream<ap_axiu<24,1,0,0>>& vidIn,
-		hls::stream<ap_axiu<24,1,0,0>>& vidOut,
-		int offset);
+#include "video_offset.h"
 
 int main()
 {
-    std::string image_path = "/home/ckayhan/hls/Lenna_In.png";
+    std::string image_path = "/home/ckayhan/video_offset/Lenna_In.png";
     static cv::Mat img = cv::imread(image_path, cv::IMREAD_COLOR);
 
+#if 1
     if(img.empty())
     {
         std::cout << "Could not read the image: " << image_path << std::endl;
@@ -27,10 +22,10 @@ int main()
     static cv::Mat imgScaled;
     cv::resize(img,imgScaled,cv::Size(1920,1080),cv::INTER_LINEAR);
 
-    static hls::stream<ap_axiu<24,1,0,0>> imgStr("imgStr");
+    static hls::stream<ap_axiu<24,1,1,1>> imgStr("imgStr");
     for (auto i=0; i<1080; ++i) {
     	for (auto j=0; j<1920; ++j) {
-    		ap_axiu<24,1,0,0> tmp;
+    		ap_axiu<24,1,1,1> tmp;
     		if (j==1919) {
     			tmp.last=1;
     		} else {
@@ -49,7 +44,7 @@ int main()
     	}
     }
 
-    static hls::stream<ap_axiu<24,1,0,0>> imgStr2("imgStr2");
+    static hls::stream<ap_axiu<24,1,1,1>> imgStr2("imgStr2");
     for (auto i=0; i<1080/2; ++i) {
     	video_offset(imgStr,imgStr2,400);
     }
@@ -57,7 +52,7 @@ int main()
     static cv::Mat imgScaledOut(1080,1920,CV_8UC3);
     for (auto i=0; i<1080; ++i) {
     	for (auto j=0; j<1920; ++j) {
-    		ap_axiu<24,1,0,0> tmp = imgStr2.read();
+    		ap_axiu<24,1,1,1> tmp = imgStr2.read();
     		cv::Vec3b pix;
     		pix[0] = tmp.data(7,0);
     		pix[1] = tmp.data(15,8);
@@ -68,6 +63,7 @@ int main()
 
     cv::imshow("Display window", imgScaledOut);
     cv::waitKey(0); // Wait for a keystroke in the window
+#endif
 
     return 0;
 }
