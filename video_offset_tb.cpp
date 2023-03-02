@@ -9,7 +9,7 @@
 
 int main()
 {
-    std::string image_path = "/home/ckayhan/video_offset/Lenna_In.png";
+    std::string image_path = "/tmp/Lenna_In.png";
     static cv::Mat img = cv::imread(image_path, cv::IMREAD_COLOR);
 
 #if 1
