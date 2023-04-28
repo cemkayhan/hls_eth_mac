@@ -1,3 +1,2 @@
 set cflags $common_cflags
-lappend cflags "-DWIDTH_=${width}"
-add_files video_offset.cpp -cflags $cflags
+add_files dahua_fifo_to_axis.cpp -cflags $cflags

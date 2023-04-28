@@ -1,4 +1,4 @@
-set target cosim
+set target sim
 
 source common_params.tcl
 source open_project.tcl
@@ -7,9 +7,7 @@ source ldflags.tcl
 source add_files.tcl
 source add_tb_files.tcl
 
-source config_rtl.tcl
-csynth_design
-cosim_design -O -ldflags $ldflags -trace_level $trace_level
+csim_design -clean -setup -O -ldflags $ldflags
 
 puts {---------------------------------------------}
 puts " PRJ_DIR: $prj_dir"

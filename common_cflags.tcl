@@ -5,3 +5,7 @@ lappend common_cflags {-Wall}
 lappend common_cflags {-Wextra}
 #lappend common_cflags {-Wno-unused-parameter}
 lappend common_cflags {-Wno-unused-label}
+
+if {[info exists ::env(CFLAGS)]} {
+  lappend common_cflags {*}"$::env(CFLAGS)"
+}

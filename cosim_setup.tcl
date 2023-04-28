@@ -9,7 +9,7 @@ source add_tb_files.tcl
 
 source config_rtl.tcl
 csynth_design
-cosim_design -O -ldflags $ldflags -trace_level $trace_level
+cosim_design -O -setup -ldflags $ldflags -trace_level $trace_level
 
 puts {---------------------------------------------}
 puts " PRJ_DIR: $prj_dir"

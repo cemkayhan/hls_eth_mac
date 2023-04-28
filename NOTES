@@ -1,0 +1,39 @@
+//  struct States{
+//    enum {
+//      ST_WAIT_FOR_SOF=0,
+//      ST_FILTER_PIX=1
+//    } Inst;
+//  };
+//  static struct States States = {States::ST_WAIT_FOR_SOF};
+//#pragma HLS RESET variable=States
+//
+//  switch(States.Inst){
+//    case States::ST_WAIT_FOR_SOF:
+//      loop_wait_sof: while(0!=Fifo_In[Dummy_Cntr++].range(17,16)){
+//#pragma HLS PIPELINE
+//#pragma HLS LOOP_TRIPCOUNT min=FIELD_BLANK max=COL*ROW+LINE_BLANK*ROW
+//      };
+//      States.Inst=States::ST_FILTER_PIX;
+//    case States::ST_FILTER_PIX:
+//      loop_filter_pix: do{
+//#pragma HLS PIPELINE
+//#pragma HLS LOOP_TRIPCOUNT min=COL*ROW+LINE_BLANK*ROW max=COL*ROW+LINE_BLANK*ROW
+//        if(3==Fifo_In[Dummy_Cntr].range(17,16)){
+//          Fifo_Out.write(Fifo_In[Dummy_Cntr].range(15,0));
+//          ++Pix_Cntr;
+//        } else if(1==Fifo_In[Dummy_Cntr].range(17,16)){
+//          States.Inst=States::ST_WAIT_FOR_SOF;
+//          break;
+//        } else if(0==Fifo_In[Dummy_Cntr].range(17,16)){
+//          States.Inst=States::ST_WAIT_FOR_SOF;
+//          break;
+//        }
+//        ++Dummy_Cntr;
+//#if defined(D_INJECT_ERROR_)
+//      }while(Pix_Cntr<Width_*Height_);
+//#else
+//      }while(Pix_Cntr<(Width_/PPC)*Height_*PPC);
+//#endif
+//        States.Inst=States::ST_WAIT_FOR_SOF;
+//        break;
+//  }
