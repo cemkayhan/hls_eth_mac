@@ -3,6 +3,7 @@ set target cosim
 source common_params.tcl
 source open_project.tcl
 source common_cflags.tcl
+source common_cosimflags.tcl
 source ldflags.tcl
 source add_files.tcl
 source add_tb_files.tcl

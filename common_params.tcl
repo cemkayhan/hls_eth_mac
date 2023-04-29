@@ -1,6 +1,3 @@
-# common application parameters
-set width 1920
-
 # common target parameters
 set top Dahua_Fifo_To_Axis
 set trace_level port
