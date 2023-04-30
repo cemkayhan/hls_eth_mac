@@ -26,7 +26,7 @@ void Filter_Valid_Pix(ap_uint<VID_DWIDTH+2> Fifo_In[FIFO_IN_SIZE],
 #pragma HLS LOOP_TRIPCOUNT min=FIELD_BLANK max=COL*ROW+LINE_BLANK*ROW
   };
 
-  loop_filter_pix: for(Pix_Cntr=0; Pix_Cntr<(Width_/PPC)*Height_*PPC;){
+  loop_filter_pix: for(Pix_Cntr=0; Pix_Cntr<(Width_/PPC)*Height_;){
 #pragma HLS PIPELINE
 #pragma HLS LOOP_TRIPCOUNT min=COL*ROW+LINE_BLANK*ROW max=COL*ROW+LINE_BLANK*ROW
     ap_uint<D_VID_DWIDTH_+2> Fifo_In_Pix=Fifo_In[Dummy_Cntr];
