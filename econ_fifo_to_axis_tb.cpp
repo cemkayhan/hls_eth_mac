@@ -1,4 +1,4 @@
-#include "dahua_fifo_to_axis.h"
+#include "econ_fifo_to_axis.h"
 
 #if defined(D_VERBOSE_)
 #include <fstream>
@@ -13,7 +13,7 @@ void Fill_Frame(ap_uint<VID_DWIDTH+2> Fifo_In[FIFO_IN_SIZE])
   }
 
   for(int i=0;i<ROW;++i){
-    for(int j=0;j<(COL/PPC)*PPC;++j){
+    for(int j=0;j<(COL/PPC);++j){
       Fifo_In[Pix_Cntr].range(VID_DWIDTH-1,0)=i+j%PPC;
       Fifo_In[Pix_Cntr].range(VID_DWIDTH+1,VID_DWIDTH)=3;
       ++Pix_Cntr;
@@ -51,15 +51,15 @@ int main()
 {
   ap_uint<D_VID_DWIDTH_+2>* Fifo_In=new ap_uint<D_VID_DWIDTH_+2>[FIFO_IN_SIZE];
   hls::stream<ap_axiu<D_PPC_*D_AXIS_DWIDTH_,1,1,1> > Axis_Out;
-  ap_uint<10> Width=D_COL_;
-  ap_uint<10> Height=D_ROW_;
+  ap_uint<COLS_BW> Cols=D_COL_;
+  ap_uint<ROWS_BW> Rows=D_ROW_;
 
   for(int i=0;i<D_N_FRAMES_;++i){
     Fill_Frame<D_COL_,D_ROW_,D_PPC_,D_VID_DWIDTH_,D_FIELD_BLANK_,D_LINE_BLANK_>(Fifo_In);
   #if defined(D_INJECT_ERROR_)
-    Dahua_Fifo_To_Axis(Fifo_In,Axis_Out,Width+1,Height);
+    Econ_Fifo_To_Axis(Fifo_In,Axis_Out,Cols+1,Rows);
   #else
-    Dahua_Fifo_To_Axis(Fifo_In,Axis_Out,Width,Height);
+    Econ_Fifo_To_Axis(Fifo_In,Axis_Out,Cols,Rows);
   #endif
     Drain_Frame<D_COL_,D_ROW_,D_PPC_,D_VID_DWIDTH_,D_AXIS_DWIDTH_>(Axis_Out);
   }

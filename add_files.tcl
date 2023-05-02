@@ -5,4 +5,4 @@ if {[info exists common_csimflags]} {
 if {[info exists common_cosimflags]} {
   lappend cflags {*}"$common_cosimflags"
 }
-add_files dahua_fifo_to_axis.cpp -cflags $cflags
+add_files econ_fifo_to_axis.cpp -cflags $cflags
