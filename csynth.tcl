@@ -1,4 +1,4 @@
-set target synth
+set target csynth
 
 source common_params.tcl
 source open_project.tcl
