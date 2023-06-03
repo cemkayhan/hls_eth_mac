@@ -1,24 +1,42 @@
 #include "hls_eth_mac.h"
-#include <iostream>
 
 int main()
 {
-  Gmii_Intf<D_MAX_MTU_,D_OCTET_BW_> Gmii;
-  hls::stream<ap_uint<D_OCTET_BW_> > Mac_Client_Data;
+  Gmii_Intf<MAX_MTU_,OCTET_BW_> Gmii;
+  hls::stream<ap_uint<OCTET_BW_> > Mac_Client_Data;
+  ap_uint<Bit_Width<MAX_MTU_>::Value > Mac_Client_Data_Len;
   ap_uint<1> Gen_Rand_Mac_Client_Data;
-  ap_uint<D_LENGTH_TYPE_BW_> Length_Type;
-  ap_uint<D_DEST_ADDR_BW_> Dest_Addr;
-  ap_uint<D_SRC_ADDR_BW_> Src_Addr;
+  ap_uint<DEST_ADDR_MSB_BW_> Dest_Addr_Msb;
+  ap_uint<DEST_ADDR_LSB_BW_> Dest_Addr_Lsb;
+  ap_uint<SRC_ADDR_MSB_BW_> Src_Addr_Msb;
+  ap_uint<SRC_ADDR_LSB_BW_> Src_Addr_Lsb;
+  ap_uint<ETHER_TYPE_BW_> Ether_Type;
 
-  Length_Type=100;
-  Dest_Addr = 1;
-  Src_Addr = 2;
+  Dest_Addr_Msb=0x1122;
+  Dest_Addr_Lsb=0x33445566;
+  Src_Addr_Msb=0xAABB;
+  Src_Addr_Lsb=0xCCDDEEFF;
+  Ether_Type=0x8123;
+  Mac_Client_Data_Len=46;
   Gen_Rand_Mac_Client_Data=1;
   if(!Gen_Rand_Mac_Client_Data){
-    for(auto i=0;i<Length_Type;++i) Mac_Client_Data.write(i);
+    Mac_Client_Data.write(0x12);
+    Mac_Client_Data.write(0x34);
+    Mac_Client_Data.write(0x56);
+    Mac_Client_Data.write(0x78);
+    Mac_Client_Data.write(0x90);
+    Mac_Client_Data.write(0xAB);
+    Mac_Client_Data.write(0xCD);
+    Mac_Client_Data.write(0xEF);
+    for(int i=0;i<38;++i)
+      Mac_Client_Data.write(0x00);
   }
-  Hls_Eth_Mac(Gmii,Mac_Client_Data,Gen_Rand_Mac_Client_Data,Length_Type,Dest_Addr,Src_Addr);
-  for(auto i=0;i<Length_Type+7+1+6+6+2;++i){
-    std::cout << Gmii[i] << '\n';
+  Hls_Eth_Mac(Gmii,Dest_Addr_Msb,Dest_Addr_Lsb,Src_Addr_Msb,Src_Addr_Lsb,
+    Ether_Type,Mac_Client_Data,Mac_Client_Data_Len,Gen_Rand_Mac_Client_Data);
+
+  auto Packet_Size=Mac_Client_Data_Len+PREAMBLE_N_OCTETS_+SFD_N_OCTETS_+
+    DEST_ADDR_N_OCTETS_+SRC_ADDR_N_OCTETS_+ETHER_TYPE_N_OCTETS_+CRC32_N_OCTETS_;
+  for(auto i=0;i<Packet_Size;++i){
+    std::cout << "[" << i << "], " << Gmii[i] << '\n';
   }
 }
