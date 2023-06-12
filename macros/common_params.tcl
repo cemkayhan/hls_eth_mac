@@ -1,5 +1,5 @@
 # common target parameters
-set top Hls_Eth_Mac
+set top Hls_Video_Debug
 set trace_level port
 set period 200MHz
-set part {xczu7ev-fbvb900-1-i}
+set part {xc7z015clg485-2}

@@ -5,4 +5,4 @@ if {[info exists common_csimflags]} {
 if {[info exists common_cosimflags]} {
   lappend cflags {*}"$common_cosimflags"
 }
-add_files [file join .. src hls_eth_mac.cpp] -cflags $cflags
+add_files [file join .. src hls_video_debug.cpp] -cflags $cflags
