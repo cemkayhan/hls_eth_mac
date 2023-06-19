@@ -1,10 +1,8 @@
-#include "ap_int.h"
-#include "ap_axi_sdata.h"
-#include "hls_stream.h"
+#include "hls_video_debug.h"
 
-template<int AXI_DW_>
-static void Main_Func(hls::stream<ap_axiu<AXI_DW_,1,1,1> >& Vid_In,
-                      hls::stream<ap_axiu<AXI_DW_,1,1,1> >& Vid_Out,
+template<int PIX_DEPTH_, int PPC_>
+static void Main_Func(hls::stream<ap_axiu<Bit_Power_Num<2*D_PIX_DEPTH_*D_PPC_>::Value,1,1,1> >& Vid_In,
+                      hls::stream<ap_axiu<Bit_Power_Num<2*D_PIX_DEPTH_*D_PPC_>::Value,1,1,1> >& Vid_Out,
                       ap_uint<16>& Pixel_Cntr_Axi,
                       ap_uint<16>& Line_Cntr_Axi,
                       ap_uint<16>& Frame_Cntr_Axi,
@@ -20,7 +18,7 @@ static void Main_Func(hls::stream<ap_axiu<AXI_DW_,1,1,1> >& Vid_In,
 
   loopMainLoop: do{
 #pragma HLS PIPELINE
-    ap_axiu<AXI_DW_,1,1,1> Pix;
+    ap_axiu<Bit_Power_Num<2*D_PIX_DEPTH_*D_PPC_>::Value,1,1,1> Pix;
     Vid_In >> Pix;
     if(Pix.last){
 #if defined(D_ENABLE_LINE_CNTR_)
@@ -32,6 +30,9 @@ static void Main_Func(hls::stream<ap_axiu<AXI_DW_,1,1,1> >& Vid_In,
     } else if(Pix.user){  
 #if defined(D_ENABLE_FRAME_CNTR_)
       ++Frame_Cntr_;
+#endif
+#if defined(D_ENABLE_LINE_CNTR_)
+      Line_Cntr_=0;
 #endif
 #if defined(D_ENABLE_PIXEL_CNTR_)
       ++Pixel_Cntr_;
@@ -58,8 +59,8 @@ static void Main_Func(hls::stream<ap_axiu<AXI_DW_,1,1,1> >& Vid_In,
   }while(1);
 }
 
-void Hls_Video_Debug(hls::stream<ap_axiu<D_AXI_DW_,1,1,1> >& Vid_In,
-                     hls::stream<ap_axiu<D_AXI_DW_,1,1,1> >& Vid_Out,
+void Hls_Video_Debug(hls::stream<ap_axiu<Bit_Power_Num<2*D_PIX_DEPTH_*D_PPC_>::Value,1,1,1> >& Vid_In,
+                     hls::stream<ap_axiu<Bit_Power_Num<2*D_PIX_DEPTH_*D_PPC_>::Value,1,1,1> >& Vid_Out,
                      ap_uint<16>& Pixel_Cntr_Axi,
                      ap_uint<16>& Line_Cntr_Axi,
                      ap_uint<16>& Frame_Cntr_Axi,
@@ -79,7 +80,8 @@ void Hls_Video_Debug(hls::stream<ap_axiu<D_AXI_DW_,1,1,1> >& Vid_In,
 #pragma HLS INTERFACE axis port=Vid_In
 #pragma HLS INTERFACE axis port=Vid_Out
 
-  Main_Func<D_AXI_DW_>(Vid_In,Vid_Out,
-                       Pixel_Cntr_Axi,Line_Cntr_Axi,Frame_Cntr_Axi,
-                       Pixel_Cntr,Line_Cntr,Frame_Cntr);
+  Main_Func<D_PIX_DEPTH_,D_PPC_>
+    (Vid_In,Vid_Out,
+     Pixel_Cntr_Axi,Line_Cntr_Axi,Frame_Cntr_Axi,
+     Pixel_Cntr,Line_Cntr,Frame_Cntr);
 }
