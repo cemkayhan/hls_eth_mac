@@ -3,7 +3,7 @@
 
 #include "ap_int.h"
 
-void Hls_File1(
+void D_TOP_(
   ap_uint<32> Ctrl[16]
 );
 

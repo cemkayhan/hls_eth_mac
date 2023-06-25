@@ -1,6 +1,6 @@
 #include "hls_file1.h"
 
-void Hls_File1(
+void D_TOP_(
   ap_uint<32> Ctrl[16]
 ){
 #pragma HLS INTERFACE ap_ctrl_none port=return
