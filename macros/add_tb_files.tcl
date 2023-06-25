@@ -9,4 +9,8 @@ if {[info exists common_cosimflags]} {
 #lappend cflags {-I/usr/local/include/opencv -I/usr/local/include}
 #lappend cflags {-I/usr/local/include/opencv4/opencv}
 #lappend cflags {-I/usr/local/include/opencv4}
-add_files -tb [file join .. src hls_eth_mac_tb.cpp] -cflags $cflags
+
+set fid [open [file join .. TB_FILES] r]
+while {[gets $fid line]>=0} {
+  add_files -tb $line -cflags $cflags
+}

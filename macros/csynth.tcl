@@ -1,6 +1,5 @@
 set target csynth
 
-source common_params.tcl
 source open_project.tcl
 source common_cflags.tcl
 source add_files.tcl

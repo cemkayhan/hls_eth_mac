@@ -1,5 +1,4 @@
-# common target parameters
-set top Hls_Video_Debug
+set top
 set trace_level port
-set period 200MHz
+set period 
 set part {xc7z015clg485-2}

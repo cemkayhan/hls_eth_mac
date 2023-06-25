@@ -1,6 +1,5 @@
 set target csim
 
-source common_params.tcl
 source open_project.tcl
 source common_cflags.tcl
 source common_csimflags.tcl
