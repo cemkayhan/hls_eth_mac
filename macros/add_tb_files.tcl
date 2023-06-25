@@ -14,3 +14,4 @@ set fid [open [file join .. TB_FILES] r]
 while {[gets $fid line]>=0} {
   add_files -tb $line -cflags $cflags
 }
+close $fid

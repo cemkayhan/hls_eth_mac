@@ -10,3 +10,4 @@ set fid [open [file join .. FILES] r]
 while {[gets $fid line]>=0} {
   add_files $line -cflags $cflags
 }
+close $fid
