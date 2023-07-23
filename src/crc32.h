@@ -3,7 +3,7 @@
 
 #include "ap_int.h"
 
-ap_uint<8> Update_Crc(ap_uint<8> Data,ap_uint<32>& Result){
+static ap_uint<8> Update_Crc(ap_uint<8> Data,ap_uint<32>& Result){
 #pragma HLS INLINE
 
   static const ap_uint<32> Crc_Table[] = {
